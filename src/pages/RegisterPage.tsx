@@ -97,7 +97,7 @@ function RegisterPage() {
       });
       // Auto sign in after confirmation
       await signIn({ username: email, password });
-      navigate("/project");
+      navigate("/dashboard");
     } catch (err: any) {
       setError(err.message || "Failed to confirm account. Please try again.");
     } finally {

@@ -7,6 +7,7 @@ import ProjectPage from "./../pages/ProjectPage.tsx";
 import RegisterPage from "./../pages/RegisterPage.tsx";
 import { ProtectedRoute } from "../auth/ProtectedRoute.tsx";
 import { PublicRoute } from "../auth/PublicRoute.tsx";
+import DashboardPage from "../pages/DashboardPage.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +35,24 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <ProjectPage />
+          </ProtectedRoute>
+        ),
+        children: [
+          {
+            path: ":pid",
+            element: (
+              <ProtectedRoute>
+                <ProjectPage />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      {
+        path: "dashboard",
+        element: (
+          <ProtectedRoute>
+            <DashboardPage />
           </ProtectedRoute>
         ),
       },

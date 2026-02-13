@@ -6,7 +6,7 @@ export function PublicRoute({ children }: { children: ReactNode }) {
   const { route } = useAuthenticator();
 
   if (route === "authenticated") {
-    return <Navigate to="/project" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;

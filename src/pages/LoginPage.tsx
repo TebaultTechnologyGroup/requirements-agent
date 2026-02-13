@@ -43,7 +43,7 @@ function LoginPage() {
 
     try {
       await signIn({ username: email, password });
-      navigate("/project");
+      navigate("/dashboard");
     } catch (err: any) {
       console.error("Login error:", err);
 

@@ -23,14 +23,8 @@ import {
   Code,
   CloudUpload,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
-  const navigate = useNavigate();
-  const onLoginClick = () => {
-    navigate("/login");
-  };
-
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       {/* Hero Section */}
@@ -67,6 +61,30 @@ export default function LandingPage() {
                 requirements, user stories, risk analysis, and MVP scope
                 recommendations in minutes.
               </Typography>
+              {/* <Typography
+                variant="body1"
+                paragraph
+                sx={{ opacity: 0.8, mb: 4 }}
+              >
+                Want to learn more about using AI tools like this for your
+                organization?
+              </Typography> */}
+              <Button
+                variant="contained"
+                size="large"
+                href="https://www.tebaulttechnologygroup.com/contact-us"
+                target="_new"
+                sx={{
+                  bgcolor: "white",
+                  color: "primary.main",
+                  "&:hover": { bgcolor: "grey.100" },
+                  px: 4,
+                  py: 1.5,
+                }}
+              >
+                Click here to learn more about using AI tools for your
+                organization
+              </Button>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
               <Paper
@@ -85,17 +103,6 @@ export default function LandingPage() {
                   </Typography>
                   <Typography variant="body2">
                     • Powered by Claude 3 Haiku
-                  </Typography>
-                  <Typography variant="body2">
-                    •{" "}
-                    <a
-                      href="https://www.tebaulttechnologygroup.com/contact-us"
-                      target="_blank"
-                      style={{ color: "inherit", textDecoration: "underline" }}
-                    >
-                      Contact Mark
-                    </a>{" "}
-                    to learn how you can leverage AI for your own use cases.
                   </Typography>
                 </Box>
               </Paper>
@@ -332,6 +339,7 @@ export default function LandingPage() {
                 </Typography>
                 <Chip label="AWS Bedrock" size="small" sx={{ m: 0.5 }} />
                 <Chip label="Claude 3 Haiku" size="small" sx={{ m: 0.5 }} />
+                <Box sx={{ paddingBottom: 4 }}></Box>
               </CardContent>
             </Card>
           </Grid>
@@ -360,16 +368,13 @@ export default function LandingPage() {
       <Box sx={{ bgcolor: "primary.main", color: "white", py: 8 }}>
         <Container maxWidth="md" sx={{ textAlign: "center" }}>
           <Typography variant="h4" gutterBottom>
-            Ready to Generate Your First PRD?
-          </Typography>
-          <Typography variant="body1" paragraph sx={{ opacity: 0.9, mb: 4 }}>
-            This is a portfolio demonstration project showcasing GenAI
-            integration in a production-ready SaaS architecture.
+            Ready to build AI enabled workflows?
           </Typography>
           <Button
             variant="contained"
             size="large"
-            onClick={onLoginClick}
+            href="https://www.tebaulttechnologygroup.com/contact-us"
+            target="_new"
             sx={{
               bgcolor: "white",
               color: "primary.main",
@@ -378,7 +383,7 @@ export default function LandingPage() {
               py: 1.5,
             }}
           >
-            Sign In to Get Started
+            Click here to get started
           </Button>
         </Container>
       </Box>
@@ -387,8 +392,7 @@ export default function LandingPage() {
       <Box sx={{ bgcolor: "grey.900", color: "white", py: 4 }}>
         <Container maxWidth="lg">
           <Typography variant="body2" textAlign="center" sx={{ opacity: 0.7 }}>
-            Built for portfolio demonstration • SaaS billing component is mocked
-            • MIT License
+            Built for portfolio demonstration • MIT License
           </Typography>
         </Container>
       </Box>
