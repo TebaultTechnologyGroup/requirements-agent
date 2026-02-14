@@ -1,401 +1,541 @@
 import {
   Box,
+  Button,
   Container,
   Typography,
-  Button,
-  Paper,
+  Stack,
   Grid,
   Card,
-  CardContent,
   Chip,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
 } from "@mui/material";
-import {
-  CheckCircle,
-  AutoAwesome,
-  Security,
-  Speed,
-  TrendingUp,
-  Code,
-  CloudUpload,
-} from "@mui/icons-material";
+import { Link } from "react-router";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import SpeedIcon from "@mui/icons-material/Speed";
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
-export default function LandingPage() {
+function HomePage() {
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+    <Box sx={{ bgcolor: "#fafafa", minHeight: "100vh" }}>
       {/* Hero Section */}
       <Box
         sx={{
-          bgcolor: "primary.light",
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
           color: "white",
-          py: 8,
-          px: 2,
+          py: 12,
+          position: "relative",
+          overflow: "hidden",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background:
+              "radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+          },
         }}
       >
-        <Container maxWidth="lg">
-          <Grid container spacing={4} alignItems="center">
-            <Grid size={{ xs: 12, md: 8 }}>
-              <Typography
-                variant="h2"
-                component="h1"
-                gutterBottom
-                fontWeight="bold"
-              >
-                AI Product Requirements Generator
-              </Typography>
-              <Typography variant="h5" paragraph sx={{ opacity: 0.9 }}>
-                Transform your product ideas into comprehensive Product
-                Requirement Documents (PRDs) with AI-powered analysis
-              </Typography>
-              <Typography
-                variant="body1"
-                paragraph
-                sx={{ opacity: 0.8, mb: 4 }}
-              >
-                This is a demonstration of a GenAI integration in a
-                production-ready SaaS architecture. Generate detailed product
-                requirements, user stories, risk analysis, and MVP scope
-                recommendations in minutes.
-              </Typography>
-              {/* <Typography
-                variant="body1"
-                paragraph
-                sx={{ opacity: 0.8, mb: 4 }}
-              >
-                Want to learn more about using AI tools like this for your
-                organization?
-              </Typography> */}
+        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
+          <Stack spacing={4} alignItems="center" textAlign="center">
+            <Chip
+              label="AI Optimization Demo"
+              sx={{
+                bgcolor: "rgba(255,255,255,0.2)",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                px: 2,
+                py: 0.5,
+              }}
+            />
+            <Typography
+              variant="h2"
+              sx={{
+                fontWeight: 800,
+                maxWidth: 800,
+                fontSize: { xs: "2.5rem", md: "3.5rem" },
+                lineHeight: 1.2,
+              }}
+            >
+              Create Capacity Without Adding Headcount
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                maxWidth: 700,
+                opacity: 0.95,
+                fontWeight: 400,
+                lineHeight: 1.6,
+              }}
+            >
+              See how AI-powered automation transforms manual workflows into
+              intelligent systems. This live demo showcases the tools I build to
+              help organizations reclaim 3–6 months of operational capacity.
+            </Typography>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={2}
+              sx={{ mt: 2 }}
+            >
               <Button
+                component={Link}
+                to="/login"
                 variant="contained"
                 size="large"
-                href="https://www.tebaulttechnologygroup.com/contact-us"
-                target="_new"
                 sx={{
                   bgcolor: "white",
-                  color: "primary.main",
-                  "&:hover": { bgcolor: "grey.100" },
+                  color: "#667eea",
                   px: 4,
                   py: 1.5,
+                  fontSize: "1.1rem",
+                  fontWeight: 700,
+                  borderRadius: 2,
+                  textTransform: "none",
+                  boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
+                  "&:hover": {
+                    bgcolor: "#f8f8f8",
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
+                  },
                 }}
+                startIcon={<PlayArrowIcon />}
               >
-                Click here to learn more about using AI tools for your
-                organization
+                Try the Demo
               </Button>
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <Paper
+              <Button
+                href="https://www.tebaulttechnologygroup.com/contact-us"
+                target="_blank"
+                variant="outlined"
+                size="large"
                 sx={{
-                  p: 3,
-                  bgcolor: "rgba(255,255,255,0.1)",
-                  backdropFilter: "blur(10px)",
+                  borderColor: "white",
+                  color: "white",
+                  px: 4,
+                  py: 1.5,
+                  fontSize: "1.1rem",
+                  fontWeight: 600,
+                  borderRadius: 2,
+                  textTransform: "none",
+                  borderWidth: 2,
+                  "&:hover": {
+                    borderColor: "white",
+                    bgcolor: "rgba(255,255,255,0.1)",
+                    borderWidth: 2,
+                  },
                 }}
+                startIcon={<BusinessCenterIcon />}
               >
-                <Typography variant="h6" gutterBottom color="white">
-                  ✨ Demo Features
-                </Typography>
-                <Box sx={{ color: "white", opacity: 0.9 }}>
-                  <Typography variant="body2">
-                    • Generate up to 5 sample product ideas
-                  </Typography>
-                  <Typography variant="body2">
-                    • Powered by Claude 3 Haiku
-                  </Typography>
-                </Box>
-              </Paper>
-            </Grid>
-          </Grid>
+                Schedule a Consultation
+              </Button>
+            </Stack>
+          </Stack>
         </Container>
       </Box>
 
-      {/* Key Features Section */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography
-          variant="h3"
-          component="h2"
-          gutterBottom
-          textAlign="center"
-          mb={6}
-        >
-          Key Features
-        </Typography>
-
-        <Grid container spacing={4}>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Card sx={{ height: "100%" }}>
-              <CardContent>
-                <AutoAwesome
-                  sx={{ fontSize: 40, color: "primary.main", mb: 2 }}
-                />
-                <Typography variant="h6" gutterBottom>
-                  AI-Powered Generation
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Structured JSON outputs from AWS Bedrock (Claude 3 Haiku) with
-                  comprehensive PRD components including goals, metrics, and
-                  timelines.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Card sx={{ height: "100%" }}>
-              <CardContent>
-                <Security sx={{ fontSize: 40, color: "primary.main", mb: 2 }} />
-                <Typography variant="h6" gutterBottom>
-                  Secure & Scalable
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Built with AWS Amplify Gen2, featuring Cognito authentication,
-                  DynamoDB storage, and plan-based quota enforcement.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Card sx={{ height: "100%" }}>
-              <CardContent>
-                <Speed sx={{ fontSize: 40, color: "primary.main", mb: 2 }} />
-                <Typography variant="h6" gutterBottom>
-                  Cost-Effective
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  ~$0.004 per generation using Claude 3 Haiku. Even 1,000
-                  generations/month costs less than $5.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Container>
-
-      {/* Core Functionality Section */}
-      <Box sx={{ bgcolor: "grey.50", py: 8 }}>
-        <Container maxWidth="lg">
-          <Typography
-            variant="h3"
-            component="h2"
-            gutterBottom
-            textAlign="center"
-            mb={6}
-          >
-            What You Get
-          </Typography>
+      {/* What This Demonstrates */}
+      <Container maxWidth="lg" sx={{ py: 10 }}>
+        <Stack spacing={6}>
+          <Box textAlign="center">
+            <Typography variant="h3" sx={{ fontWeight: 700, mb: 2 }}>
+              Real AI in Action
+            </Typography>
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ maxWidth: 700, mx: "auto" }}
+            >
+              This interactive demo shows how AI automation eliminates manual
+              bottlenecks
+            </Typography>
+          </Box>
 
           <Grid container spacing={4}>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Paper sx={{ p: 3, height: "100%" }}>
-                <Typography variant="h6" gutterBottom color="primary">
-                  Comprehensive PRD Output
+            <Grid size={{ xs: 12, md: 4 }}>
+              <Card
+                sx={{
+                  height: "100%",
+                  p: 3,
+                  borderRadius: 3,
+                  border: "1px solid",
+                  borderColor: "divider",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: "0 12px 24px rgba(0,0,0,0.1)",
+                    borderColor: "#667eea",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: 2,
+                    background:
+                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mb: 3,
+                  }}
+                >
+                  <AutoAwesomeIcon sx={{ fontSize: 32, color: "white" }} />
+                </Box>
+                <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
+                  Intelligent Automation
                 </Typography>
-                <List dense>
-                  <ListItem>
-                    <ListItemIcon>
-                      <CheckCircle color="success" />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Product Overview"
-                      secondary="Goals and success metrics"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <CheckCircle color="success" />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="User Stories"
-                      secondary="With acceptance criteria"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <CheckCircle color="success" />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Risk Analysis"
-                      secondary="With mitigation strategies"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <CheckCircle color="success" />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="MVP Scope"
-                      secondary="In/out-of-scope features"
-                    />
-                  </ListItem>
-                </List>
-              </Paper>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ lineHeight: 1.7 }}
+                >
+                  See how Claude AI transforms manual document creation into
+                  instant, high-quality outputs. What used to take hours now
+                  takes seconds—with better results.
+                </Typography>
+              </Card>
             </Grid>
 
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Paper sx={{ p: 3, height: "100%" }}>
-                <Typography variant="h6" gutterBottom color="primary">
-                  Interactive Features
+            <Grid size={{ xs: 12, md: 4 }}>
+              <Card
+                sx={{
+                  height: "100%",
+                  p: 3,
+                  borderRadius: 3,
+                  border: "1px solid",
+                  borderColor: "divider",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: "0 12px 24px rgba(0,0,0,0.1)",
+                    borderColor: "#667eea",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: 2,
+                    background:
+                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mb: 3,
+                  }}
+                >
+                  <SpeedIcon sx={{ fontSize: 32, color: "white" }} />
+                </Box>
+                <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
+                  Workflow Simplification
                 </Typography>
-                <List dense>
-                  <ListItem>
-                    <ListItemIcon>
-                      <CheckCircle color="success" />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Guided Multi-Step Form"
-                      secondary="Material-UI Stepper interface"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <CheckCircle color="success" />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Editable Results"
-                      secondary="Interactive tabbed view"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <CheckCircle color="success" />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Export to Markdown"
-                      secondary="Download for documentation"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <CheckCircle color="success" />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Generation History"
-                      secondary="All PRDs saved to your account"
-                    />
-                  </ListItem>
-                </List>
-              </Paper>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ lineHeight: 1.7 }}
+                >
+                  Experience streamlined processes that eliminate unnecessary
+                  steps and handoffs. This is how I help teams reclaim 21% of
+                  their operational capacity.
+                </Typography>
+              </Card>
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 4 }}>
+              <Card
+                sx={{
+                  height: "100%",
+                  p: 3,
+                  borderRadius: 3,
+                  border: "1px solid",
+                  borderColor: "divider",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: "0 12px 24px rgba(0,0,0,0.1)",
+                    borderColor: "#667eea",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: 2,
+                    background:
+                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mb: 3,
+                  }}
+                >
+                  <TrendingUpIcon sx={{ fontSize: 32, color: "white" }} />
+                </Box>
+                <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
+                  Measurable Impact
+                </Typography>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ lineHeight: 1.7 }}
+                >
+                  Many companies report a 4X increase in efficiency using AI.
+                  Let me show you how AI and process optimization can help your
+                  organization.
+                </Typography>
+                <Link
+                  to="https://www.worklytics.co/resources/ai-adoption-employee-productivity-pwc-2025-ai-jobs-barometer-guide"
+                  target="_blank"
+                  style={{ fontSize: 10 }}
+                >
+                  worklytics.co
+                </Link>
+                &nbsp;
+                <Link
+                  to="https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai"
+                  target="_blank"
+                  style={{ fontSize: 10 }}
+                >
+                  McKinsey
+                </Link>
+              </Card>
             </Grid>
           </Grid>
-        </Container>
-      </Box>
-
-      {/* Tech Stack Section */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography
-          variant="h3"
-          component="h2"
-          gutterBottom
-          textAlign="center"
-          mb={6}
-        >
-          Technology Stack
-        </Typography>
-
-        <Grid container spacing={3}>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent sx={{ textAlign: "center" }}>
-                <Code sx={{ fontSize: 40, color: "primary.main", mb: 1 }} />
-                <Typography variant="h6" gutterBottom>
-                  Frontend
-                </Typography>
-                <Chip label="React 18.3" size="small" sx={{ m: 0.5 }} />
-                <Chip label="TypeScript" size="small" sx={{ m: 0.5 }} />
-                <Chip label="Material-UI" size="small" sx={{ m: 0.5 }} />
-                <Chip label="Vite" size="small" sx={{ m: 0.5 }} />
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent sx={{ textAlign: "center" }}>
-                <CloudUpload
-                  sx={{ fontSize: 40, color: "primary.main", mb: 1 }}
-                />
-                <Typography variant="h6" gutterBottom>
-                  Backend
-                </Typography>
-                <Chip label="AWS Amplify" size="small" sx={{ m: 0.5 }} />
-                <Chip label="Lambda" size="small" sx={{ m: 0.5 }} />
-                <Chip label="DynamoDB" size="small" sx={{ m: 0.5 }} />
-                <Chip label="Cognito" size="small" sx={{ m: 0.5 }} />
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent sx={{ textAlign: "center" }}>
-                <AutoAwesome
-                  sx={{ fontSize: 40, color: "primary.main", mb: 1 }}
-                />
-                <Typography variant="h6" gutterBottom>
-                  AI/ML
-                </Typography>
-                <Chip label="AWS Bedrock" size="small" sx={{ m: 0.5 }} />
-                <Chip label="Claude 3 Haiku" size="small" sx={{ m: 0.5 }} />
-                <Box sx={{ paddingBottom: 4 }}></Box>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent sx={{ textAlign: "center" }}>
-                <TrendingUp
-                  sx={{ fontSize: 40, color: "primary.main", mb: 1 }}
-                />
-                <Typography variant="h6" gutterBottom>
-                  Features
-                </Typography>
-                <Chip label="Authentication" size="small" sx={{ m: 0.5 }} />
-                <Chip label="Usage Tracking" size="small" sx={{ m: 0.5 }} />
-                <Chip label="Plan Quotas" size="small" sx={{ m: 0.5 }} />
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        </Stack>
       </Container>
 
-      <Divider />
+      {/* The Challenge */}
+      <Box sx={{ bgcolor: "white", py: 8 }}>
+        <Container maxWidth="lg">
+          <Grid container spacing={6} alignItems="center">
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Typography variant="h3" sx={{ fontWeight: 700, mb: 3 }}>
+                Sound Familiar?
+              </Typography>
+              <Stack spacing={2}>
+                {[
+                  "Teams overwhelmed by manual reporting and reconciliation",
+                  "Work growing faster than headcount approvals",
+                  "Interest in AI but no clear execution plan",
+                  "Bottlenecks slowing delivery and decision-making",
+                  "Manual processes consuming hours that shouldn't require a person",
+                ].map((item) => (
+                  <Box
+                    key={item}
+                    sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}
+                  >
+                    <Box
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: "50%",
+                        bgcolor: "#667eea",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        mt: 0.5,
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          color: "white",
+                          fontSize: "0.9rem",
+                          fontWeight: 700,
+                        }}
+                      >
+                        ✓
+                      </Typography>
+                    </Box>
+                    <Typography variant="body1" sx={{ lineHeight: 1.7 }}>
+                      {item}
+                    </Typography>
+                  </Box>
+                ))}
+              </Stack>
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Box
+                sx={{
+                  p: 4,
+                  borderRadius: 3,
+                  background:
+                    "linear-gradient(135deg, #f3f4ff 0%, #e8eaff 100%)",
+                  border: "2px solid #667eea",
+                }}
+              >
+                <Typography
+                  variant="h4"
+                  sx={{ fontWeight: 700, mb: 2, color: "#667eea" }}
+                >
+                  The Solution
+                </Typography>
+                <Typography variant="body1" sx={{ lineHeight: 1.8, mb: 2 }}>
+                  I help organizations create 3–6 months of operational capacity
+                  through targeted workflow simplification and practical AI
+                  automation.
+                </Typography>
+                <Typography variant="body1" sx={{ lineHeight: 1.8 }}>
+                  This demo shows the caliber of solutions I build:
+                  production-ready tools that eliminate bottlenecks, reduce
+                  manual work, and free your teams to focus on what actually
+                  drives value.
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* How I Can Help */}
+      <Container maxWidth="lg" sx={{ py: 10 }}>
+        <Stack spacing={6}>
+          <Box textAlign="center">
+            <Typography variant="h3" sx={{ fontWeight: 700, mb: 2 }}>
+              How I Help Organizations
+            </Typography>
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ maxWidth: 700, mx: "auto" }}
+            >
+              20+ years of operational excellence meets cutting-edge AI
+              automation
+            </Typography>
+          </Box>
+
+          <Grid container spacing={8}>
+            {[
+              {
+                title: "Capacity & Workflow Clarity Assessment",
+                desc: "Quick 2-week diagnostic to identify where capacity can be reclaimed through workflow optimization and targeted automation.",
+              },
+              {
+                title: "AI Automation & Integration",
+                desc: "Implement practical AI solutions that eliminate manual bottlenecks and accelerate decision cycles—only where it truly helps.",
+              },
+              {
+                title: "Process Optimization",
+                desc: "Simplify workflows, align process with technology, and create clear visibility into where time and effort are going.",
+              },
+              {
+                title: "Fractional Leadership",
+                desc: "Contract or interim COO, CCO, or operations leadership to stabilize teams under pressure and execute strategic transformations.",
+              },
+            ].map((service) => (
+              <Grid size={{ xs: 12, md: 6 }} key={service.title}>
+                <Card
+                  sx={{
+                    p: 3,
+                    height: "100%",
+                    borderRadius: 2,
+                    border: "1px solid",
+                    borderColor: "divider",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      borderColor: "#667eea",
+                      boxShadow: "0 4px 12px rgba(102, 126, 234, 0.15)",
+                    },
+                  }}
+                >
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                    {service.title}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ lineHeight: 1.6 }}
+                  >
+                    {service.desc}
+                  </Typography>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Stack>
+      </Container>
 
       {/* CTA Section */}
-      <Box sx={{ bgcolor: "primary.main", color: "white", py: 8 }}>
-        <Container maxWidth="md" sx={{ textAlign: "center" }}>
-          <Typography variant="h4" gutterBottom>
-            Ready to build AI enabled workflows?
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            href="https://www.tebaulttechnologygroup.com/contact-us"
-            target="_new"
-            sx={{
-              bgcolor: "white",
-              color: "primary.main",
-              "&:hover": { bgcolor: "grey.100" },
-              px: 4,
-              py: 1.5,
-            }}
-          >
-            Click here to get started
-          </Button>
-        </Container>
-      </Box>
-
-      {/* Footer */}
-      <Box sx={{ bgcolor: "grey.900", color: "white", py: 4 }}>
-        <Container maxWidth="lg">
-          <Typography variant="body2" textAlign="center" sx={{ opacity: 0.7 }}>
-            Built for portfolio demonstration • MIT License
-          </Typography>
-        </Container>
-      </Box>
+      <Container maxWidth="lg" sx={{ py: 10 }}>
+        <Card
+          sx={{
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            color: "white",
+            p: 6,
+            borderRadius: 4,
+            textAlign: "center",
+          }}
+        >
+          <Stack spacing={3} alignItems="center">
+            <Typography variant="h3" sx={{ fontWeight: 700 }}>
+              Ready to Create Capacity?
+            </Typography>
+            <Typography variant="h6" sx={{ maxWidth: 700, opacity: 0.95 }}>
+              Let's discuss how workflow optimization and AI automation can free
+              up meaningful capacity for your team—without adding headcount.
+            </Typography>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+              <Button
+                href="https://www.tebaulttechnologygroup.com/meetings/tebault"
+                target="_blank"
+                variant="contained"
+                size="large"
+                sx={{
+                  bgcolor: "white",
+                  color: "#667eea",
+                  px: 4,
+                  py: 1.5,
+                  fontSize: "1.1rem",
+                  fontWeight: 700,
+                  borderRadius: 2,
+                  textTransform: "none",
+                  "&:hover": {
+                    bgcolor: "#f8f8f8",
+                  },
+                }}
+              >
+                Schedule a Consultation
+              </Button>
+              <Button
+                href="https://www.tebaulttechnologygroup.com"
+                target="_blank"
+                variant="outlined"
+                size="large"
+                sx={{
+                  borderColor: "white",
+                  color: "white",
+                  px: 4,
+                  py: 1.5,
+                  fontSize: "1.1rem",
+                  fontWeight: 600,
+                  borderRadius: 2,
+                  textTransform: "none",
+                  borderWidth: 2,
+                  "&:hover": {
+                    borderColor: "white",
+                    bgcolor: "rgba(255,255,255,0.1)",
+                    borderWidth: 2,
+                  },
+                }}
+              >
+                Learn More
+              </Button>
+            </Stack>
+            <Box sx={{ pt: 2 }}>
+              <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                📞 (770) 862-7067 | ✉️ mark.tebault@tebaulttechnologygroup.com
+              </Typography>
+            </Box>
+          </Stack>
+        </Card>
+      </Container>
     </Box>
   );
 }
+
+export default HomePage;

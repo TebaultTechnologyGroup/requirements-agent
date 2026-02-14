@@ -145,126 +145,159 @@ function LoginPage() {
   // Login View
   if (viewState === "login") {
     return (
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          background: "primary.light",
-        }}
-      >
-        <Container maxWidth="sm">
-          <Paper elevation={3} sx={{ p: 4 }}>
-            <Box sx={{ textAlign: "center", mb: 3 }}>
-              <Typography
-                variant="h4"
-                component="h1"
-                gutterBottom
-                sx={{ fontWeight: "bold" }}
-              >
-                Welcome Back
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Sign in to your account
-              </Typography>
-            </Box>
-
-            {error && (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {error}
-              </Alert>
-            )}
-
-            {success && (
-              <Alert severity="success" sx={{ mb: 2 }}>
-                {success}
-              </Alert>
-            )}
-
-            <form onSubmit={handleSubmit}>
-              <TextField
-                label="Email"
-                type="email"
-                fullWidth
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                sx={{ mb: 2 }}
-                autoComplete="email"
-              />
-              <TextField
-                label="Password"
-                type={showPassword ? "text" : "password"}
-                fullWidth
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                sx={{ mb: 1 }}
-                autoComplete="current-password"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handleClickShowPassword} edge="end">
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-
-              <Box sx={{ textAlign: "right", mb: 2 }}>
-                <Link
-                  component="button"
-                  type="button"
-                  variant="body2"
-                  onClick={() => {
-                    resetForm();
-                    setViewState("forgotPassword");
-                  }}
-                  sx={{ cursor: "pointer" }}
+      <>
+        <Box
+          sx={{
+            mt: 3,
+            p: 2,
+            bgcolor: "#f3f4ff",
+            borderRadius: 2,
+            border: "1px solid #e0e4ff",
+          }}
+        >
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ lineHeight: 1.6 }}
+          >
+            <strong>Why login?</strong> This demo uses live AI services to
+            generate real documents. Authentication helps prevent misuse and
+            keeps the demo available for genuine visitors interested in learning
+            about AI automation solutions. If you have not registered,{" "}
+            <Link
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
+              Click here to register.
+            </Link>
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            minHeight: "75vh",
+            display: "flex",
+            alignItems: "center",
+            background: "primary.light",
+          }}
+        >
+          <Container maxWidth="sm">
+            <Paper elevation={3} sx={{ p: 4 }}>
+              <Typography variant="body2" color="text.secondary"></Typography>
+              <Box sx={{ textAlign: "center", mb: 3 }}>
+                <Typography
+                  variant="h4"
+                  component="h1"
+                  gutterBottom
+                  sx={{ fontWeight: "bold" }}
                 >
-                  Forgot password?
-                </Link>
+                  Sign In
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Sign in to your account or click or register a new account.
+                </Typography>
               </Box>
 
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                size="large"
-                disabled={loading}
-                sx={{ mb: 2 }}
-              >
-                {loading ? "Signing in..." : "Sign In"}
-              </Button>
-            </form>
+              {error && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {error}
+                </Alert>
+              )}
 
-            <Box sx={{ textAlign: "center", mt: 2 }}>
-              <Typography variant="body2" color="text.secondary">
-                Don't have an account?{" "}
+              {success && (
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  {success}
+                </Alert>
+              )}
+
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  label="Email"
+                  type="email"
+                  fullWidth
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  sx={{ mb: 2 }}
+                  autoComplete="email"
+                />
+                <TextField
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  fullWidth
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  sx={{ mb: 1 }}
+                  autoComplete="current-password"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+
+                <Box sx={{ textAlign: "right", mb: 2 }}>
+                  <Link
+                    component="button"
+                    type="button"
+                    variant="body2"
+                    onClick={() => {
+                      resetForm();
+                      setViewState("forgotPassword");
+                    }}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    Forgot password?
+                  </Link>
+                </Box>
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  size="large"
+                  disabled={loading}
+                  sx={{ mb: 2 }}
+                >
+                  {loading ? "Signing in..." : "Sign In"}
+                </Button>
+              </form>
+
+              <Box sx={{ textAlign: "center", mt: 2 }}>
+                <Typography variant="body2" color="text.secondary">
+                  Don't have an account?{" "}
+                  <Link
+                    component="button"
+                    onClick={() => navigate("/register")}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    Register here
+                  </Link>
+                </Typography>
+              </Box>
+
+              <Box sx={{ textAlign: "center", mt: 1 }}>
                 <Link
                   component="button"
-                  onClick={() => navigate("/register")}
+                  variant="body2"
+                  onClick={() => navigate("/")}
                   sx={{ cursor: "pointer" }}
                 >
-                  Register here
+                  Back to Home
                 </Link>
-              </Typography>
-            </Box>
-
-            <Box sx={{ textAlign: "center", mt: 1 }}>
-              <Link
-                component="button"
-                variant="body2"
-                onClick={() => navigate("/")}
-                sx={{ cursor: "pointer" }}
-              >
-                Back to Home
-              </Link>
-            </Box>
-          </Paper>
-        </Container>
-      </Box>
+              </Box>
+            </Paper>
+          </Container>
+        </Box>
+      </>
     );
   }
 
