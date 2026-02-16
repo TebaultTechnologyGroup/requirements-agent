@@ -1,20 +1,16 @@
 import { Box, Container, Paper, Stepper, Step, StepLabel } from "@mui/material";
 import { useEffect, useState } from "react";
-
+import { generateClient } from "aws-amplify/data";
 import StepOne from "../components/StepOne";
 import StepThree from "../components/StepThree";
 import StepTwo from "../components/StepTwo";
 import ResultsView from "../components/ResultsView";
-import { useAuthenticator } from "../auth/AuthContext";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import type { Schema } from "../../amplify/data/resource";
+
+const client = generateClient<Schema>();
 
 const steps = ["Product Idea", "Target & Constraints", "Review & Generate"];
-
-// interface FormData {
-//   idea: string;
-//   targetMarket: string;
-//   constraints: string;
-//   additionalContext: string;
-// }
 
 interface PRDResult {
   productRequirements: {
@@ -45,6 +41,7 @@ interface PRDResult {
 
 function ProjectPage() {
   interface FormData {
+    title: string;
     idea: string;
     targetMarket: string;
     constraints: string;
@@ -53,6 +50,7 @@ function ProjectPage() {
   const { user } = useAuthenticator();
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<FormData>({
+    title: "",
     idea: "",
     targetMarket: "",
     constraints: "",
@@ -61,7 +59,7 @@ function ProjectPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<PRDResult | null>(null);
   const [error, setError] = useState<string>("");
-  const [setUserProfile] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
   const [quota, setQuota] = useState({ used: 0, limit: 5 });
 
   useEffect(() => {
@@ -73,33 +71,24 @@ function ProjectPage() {
   async function loadUserProfile() {
     try {
       // Load user profile
-      // const { data: profiles } = await client.models.UserProfile.list({
-      //   filter: { userId: { eq: user.userId } },
-      // });
-      const profiles = [
-        {
-          userId: 1234,
-          email: "mark@gmail.com",
-          plan: "FREE",
-          generationsThisMonth: 1,
-          monthResetDate: new Date().toISOString(),
-        },
-      ];
+      const { data: profiles } = await client.models.UserProfile.list({
+        filter: { userId: { eq: user.userId } },
+      });
 
       let userProfile = profiles[0];
       setUserProfile(userProfile);
 
       if (profiles.length === 0) {
         // Create new profile with FREE plan
-        // const newProfile = await client.models.UserProfile.create({
-        //   userId: user.userId,
-        //   email: user.signInDetails?.loginId || "",
-        //   plan: "FREE",
-        //   generationsThisMonth: 0,
-        //   monthResetDate: new Date().toISOString(),
-        // });
-        //setUserProfile(newProfile.data);
-        //setQuota({ used: 0, limit: 5 });
+        const newProfile = await client.models.UserProfile.create({
+          userId: user.userId,
+          email: user.signInDetails?.loginId || "",
+          plan: "FREE",
+          generationsThisMonth: 0,
+          monthResetDate: new Date().toISOString(),
+        });
+        setUserProfile(newProfile.data);
+        setQuota({ used: 0, limit: 5 });
       } else {
         const profile = profiles[0];
         setUserProfile(profile);
@@ -112,11 +101,11 @@ function ProjectPage() {
           now.getFullYear() !== resetDate.getFullYear()
         ) {
           // Reset counter
-          // await client.models.UserProfile.update({
-          //   id: profile.id,
-          //   generationsThisMonth: 0,
-          //   monthResetDate: new Date().toISOString(),
-          // });
+          await client.models.UserProfile.update({
+            id: profile.id,
+            generationsThisMonth: 0,
+            monthResetDate: new Date().toISOString(),
+          });
           setQuota({ used: 0, limit: getPlanLimit(profile.plan ?? 5) });
         } else {
           setQuota({
@@ -155,6 +144,7 @@ function ProjectPage() {
   const handleReset = () => {
     setActiveStep(0);
     setFormData({
+      title: "",
       idea: "",
       targetMarket: "",
       constraints: "",
@@ -185,90 +175,52 @@ function ProjectPage() {
         additionalContext: formData.additionalContext.substring(0, 50) + "...",
       });
 
-      // // Call the custom mutation
-      // const response = await client.mutations.generatePRD({
-      //   idea: formData.idea,
-      //   targetMarket: formData.targetMarket,
-      //   constraints: formData.constraints || undefined,
-      //   additionalContext: formData.additionalContext || undefined,
-      // });
-
-      // TODO: Remove when using AWS.
-      const response = { data: "bla", errors: [] };
+      // Call the custom mutation
+      const response = await client.mutations.generatePRD({
+        title: formData.title,
+        idea: formData.idea,
+        targetMarket: formData.targetMarket,
+        constraints: formData.constraints || undefined,
+        additionalContext: formData.additionalContext || undefined,
+      });
 
       console.log("Raw response:", response);
 
       if (response.data) {
         console.log("Response data:", response.data);
-        //const prdData = JSON.parse(response.data as string);
-
-        const fakeData: PRDResult = {
-          productRequirements: {
-            overview: "overview",
-            goals: ["goal1", "goal2"],
-            successMetrics: ["metric1", "metric2"],
-          },
-          userStories: [
-            {
-              role: "admin",
-              action: "clean",
-              benefit: "money",
-              acceptanceCriteria: ["criteria1", "criteria2"],
-            },
-          ],
-          risks: [
-            {
-              category: "cost",
-              description: "shit cost money",
-              likelihood: "high",
-              impact: "shit be broke",
-              mitigation: "stop it",
-            },
-          ],
-          mvpScope: {
-            inScope: ["item1", "item2"],
-            outOfScope: ["item3", "item4"],
-            timeline: "6 months",
-            assumptions: ["ass1", "ass2"],
-          },
-        };
-
-        const prdData = {
-          success: true,
-          error: "",
-          errors: ["e1", "e2"],
-          data: fakeData,
-        };
+        const prdData = JSON.parse(response.data as string);
 
         console.log("Parsed PRD data:", prdData);
 
         if (prdData.success) {
           setResult(prdData.data);
 
-          // Update usage count
-          // if (userProfile) {
-          //   await client.models.UserProfile.update({
-          //     id: userProfile.id,
-          //     generationsThisMonth: (userProfile.generationsThisMonth || 0) + 1,
-          //   });
-          //   setQuota((prev) => ({ ...prev, used: prev.used + 1 }));
-          // }
+          //Update usage count
+          if (userProfile) {
+            await client.models.UserProfile.update({
+              id: userProfile.id,
+              generationsThisMonth: (userProfile.generationsThisMonth || 0) + 1,
+            });
+            setQuota((prev) => ({ ...prev, used: prev.used + 1 }));
+          }
 
           // Save generation to history
-          // await client.models.Generation.create({
-          //   userId: user.userId,
-          //   idea: formData.idea,
-          //   targetMarket: formData.targetMarket,
-          //   constraints: formData.constraints,
-          //   additionalContext: formData.additionalContext,
-          //   productRequirements: prdData.data.productRequirements,
-          //   userStories: prdData.data.userStories,
-          //   risks: prdData.data.risks,
-          //   mvpScope: prdData.data.mvpScope,
-          //   status: "COMPLETED",
-          //   createdAt: new Date().toISOString(),
-          //   completedAt: new Date().toISOString(),
-          // });
+          await client.models.Generation.create({
+            title: formData.title,
+            userId: user.userId,
+            idea: formData.idea,
+            targetMarket: formData.targetMarket,
+            constraints: formData.constraints,
+            additionalContext: formData.additionalContext,
+            productRequirements: JSON.stringify(
+              prdData.data.productRequirements,
+            ),
+            userStories: JSON.stringify(prdData.data.userStories),
+            risks: JSON.stringify(prdData.data.risks),
+            mvpScope: JSON.stringify(prdData.data.mvpScope),
+            status: "COMPLETED",
+            completedAt: new Date().toISOString(),
+          });
         } else {
           console.error("PRD generation failed:", prdData.error);
           setError(prdData.error || "Failed to generate PRD");

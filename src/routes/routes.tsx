@@ -8,6 +8,8 @@ import RegisterPage from "./../pages/RegisterPage.tsx";
 import { ProtectedRoute } from "../auth/ProtectedRoute.tsx";
 import { PublicRoute } from "../auth/PublicRoute.tsx";
 import DashboardPage from "../pages/DashboardPage.tsx";
+import TestPage from "../pages/TestPage.tsx";
+import ProjectDetailPage from "../pages/ProjectDetailPage.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -37,16 +39,15 @@ export const router = createBrowserRouter([
             <ProjectPage />
           </ProtectedRoute>
         ),
-        children: [
-          {
-            path: ":pid",
-            element: (
-              <ProtectedRoute>
-                <ProjectPage />
-              </ProtectedRoute>
-            ),
-          },
-        ],
+      },
+      {
+        // Dynamic route for viewing a specific project
+        path: "/project/:id",
+        element: (
+          <ProtectedRoute>
+            <ProjectDetailPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "dashboard",
@@ -55,6 +56,10 @@ export const router = createBrowserRouter([
             <DashboardPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "test",
+        element: <TestPage />,
       },
       {
         path: "login",

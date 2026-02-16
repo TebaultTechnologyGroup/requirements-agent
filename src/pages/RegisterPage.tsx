@@ -13,8 +13,9 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-//import { signUp, confirmSignUp, signIn } from "aws-amplify/auth";
-import { signUp, confirmSignUp, signIn } from "../auth/AuthContext";
+import { signUp, confirmSignUp, signIn } from "aws-amplify/auth";
+//import { signUp, confirmSignUp, signIn } from "../auth/AuthContext";
+
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 function RegisterPage() {

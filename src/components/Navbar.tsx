@@ -4,20 +4,21 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import HomeIcon from "@mui/icons-material/Home";
-import { useAuthenticator } from "../auth/AuthContext";
+//import { useAuthenticator } from "../auth/AuthContext";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import { Link } from "react-router-dom";
 //import { Login } from "@mui/icons-material";
 //import { LoginPage } from "../pages/LoginPage";
 
 export default function Navbar() {
-  const { route, setRoute } = useAuthenticator();
+  const { authStatus, signOut } = useAuthenticator();
 
   return (
     <AppBar position="static" sx={{ mb: 2 }}>
       <Toolbar>
         <IconButton
           component={Link}
-          to={route === "authenticated" ? "/dashboard" : "/"}
+          to={authStatus === "authenticated" ? "/dashboard" : "/"}
           size="large"
           edge="start"
           color="inherit"
@@ -29,8 +30,8 @@ export default function Navbar() {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Product Requirements Generator (Demo)
         </Typography>
-        {route === "authenticated" ? (
-          <Button color="inherit" onClick={() => setRoute("unauthenticated")}>
+        {authStatus === "authenticated" ? (
+          <Button color="inherit" onClick={signOut}>
             Logout
           </Button>
         ) : (

@@ -5,27 +5,95 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { Box, Grid } from "@mui/material";
-import { Link } from "react-router";
+import { Box, Grid, CircularProgress } from "@mui/material";
+import { Link } from "react-router-dom";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "../../amplify/data/resource";
 
-// Placeholder projects (we’ll replace with Amplify Data soon)
-type Project = { id: string; title: string; createdAt: string };
+type Project = {
+  id: string;
+  title: string;
+  createdAt: string;
+  status?: string;
+};
 
 export default function DashboardPage() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>("");
+  const client = generateClient<Schema>();
 
   useEffect(() => {
-    // TODO: fetch from Amplify Data
-    setProjects([
-      //   {
-      //     id: "1",
-      //     title: "Initial Project Test Initial Project Test Initial Project Test",
-      //     createdAt: "1/2/2024",
-      //   },
-      //   { id: "2", title: "Sample Project 1", createdAt: "1/2/2024" },
-      //   { id: "3", title: "Sample Project 2", createdAt: "1/2/2024" },
-    ]);
+    loadProjects();
   }, []);
+
+  async function loadProjects() {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await client.models.Generation.list({
+        // Sort by most recent first
+        // Note: You may need to add sorting in your query if available
+      });
+
+      console.log("Generations:", response);
+
+      if (response.data) {
+        const formattedProjects = response.data
+          .map((gen) => ({
+            id: gen.id,
+            title: gen.title,
+            createdAt: gen.createdAt || new Date().toISOString(),
+            status: gen.status || undefined,
+          }))
+          // Sort by date, newest first
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          );
+
+        setProjects(formattedProjects);
+      } else if (response.errors) {
+        console.error("Errors loading projects:", response.errors);
+        setError("Failed to load projects");
+      }
+    } catch (err) {
+      console.error("Error loading projects:", err);
+      setError("Failed to load projects");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const getStatusColor = (status?: string) => {
+    switch (status) {
+      case "COMPLETED":
+        return "#10b981";
+      case "PROCESSING":
+        return "#f59e0b";
+      case "FAILED":
+        return "#ef4444";
+      default:
+        return "#6b7280";
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          bgcolor: "#fafafa",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "#fafafa", p: 4 }}>
@@ -79,6 +147,14 @@ export default function DashboardPage() {
           </Button>
         </Stack>
 
+        {error && (
+          <Card sx={{ bgcolor: "#fee", border: "1px solid #fcc" }}>
+            <CardContent>
+              <Typography color="error">{error}</Typography>
+            </CardContent>
+          </Card>
+        )}
+
         {projects.length === 0 ? (
           <Card
             sx={{
@@ -119,7 +195,23 @@ export default function DashboardPage() {
           <Grid container spacing={3}>
             {projects.map((p) => (
               <Grid key={p.id} size={{ xs: 12, sm: 6, md: 4 }}>
-                <Card component={Link} to={`/project/${p.id}`}>
+                <Card
+                  component={Link}
+                  to={`/project/${p.id}`}
+                  sx={{
+                    textDecoration: "none",
+                    display: "block",
+                    position: "relative",
+                    transition: "all 0.2s ease-in-out",
+                    "&:hover": {
+                      transform: "translateY(-4px)",
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+                      "& .project-gradient": {
+                        opacity: 1,
+                      },
+                    },
+                  }}
+                >
                   <Box
                     className="project-gradient"
                     sx={{
@@ -137,9 +229,6 @@ export default function DashboardPage() {
                   <CardContent
                     sx={{
                       p: 3,
-                      border: "1px solid",
-                      borderRadius: 6,
-                      borderColor: "primary.main",
                     }}
                   >
                     <Box
@@ -163,8 +252,7 @@ export default function DashboardPage() {
                       </Box>
                       <Box sx={{ flex: 1, minWidth: 0 }}>
                         <Typography
-                          variant="h5"
-                          noWrap={true}
+                          variant="h6"
                           sx={{
                             mb: 1,
                             fontWeight: 600,
@@ -179,22 +267,57 @@ export default function DashboardPage() {
                         >
                           {p.title}
                         </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: "text.secondary",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 0.5,
-                          }}
-                        >
-                          <span>🕐</span>
-                          {new Date(p.createdAt).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                        </Typography>
+                        <Stack direction="row" spacing={2} alignItems="center">
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: "text.secondary",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5,
+                            }}
+                          >
+                            <span>🕐</span>
+                            {new Date(p.createdAt).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </Typography>
+                          {p.status && (
+                            <Box
+                              sx={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 0.5,
+                                px: 1,
+                                py: 0.25,
+                                borderRadius: 1,
+                                bgcolor: `${getStatusColor(p.status)}20`,
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  width: 6,
+                                  height: 6,
+                                  borderRadius: "50%",
+                                  bgcolor: getStatusColor(p.status),
+                                }}
+                              />
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: getStatusColor(p.status),
+                                  fontWeight: 600,
+                                  fontSize: "0.65rem",
+                                  textTransform: "capitalize",
+                                }}
+                              >
+                                {p.status.toLowerCase()}
+                              </Typography>
+                            </Box>
+                          )}
+                        </Stack>
                       </Box>
                     </Box>
                   </CardContent>

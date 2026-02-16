@@ -13,12 +13,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-//import { signIn, resetPassword, confirmResetPassword } from "aws-amplify/auth";
-import {
-  signIn,
-  resetPassword,
-  confirmResetPassword,
-} from "../auth/AuthContext";
+import { signIn, resetPassword, confirmResetPassword } from "aws-amplify/auth";
 
 type ViewState = "login" | "forgotPassword" | "resetPassword";
 

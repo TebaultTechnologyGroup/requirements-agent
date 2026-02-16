@@ -2,12 +2,16 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { router } from "./routes/routes.tsx";
 import { RouterProvider } from "react-router-dom";
-import { AuthProvider } from "./auth/AuthContext.tsx";
+import { Authenticator } from "@aws-amplify/ui-react";
+import { Amplify } from "aws-amplify";
+import outputs from "../amplify_outputs.json"; // Import JSON directly
+
+Amplify.configure(outputs);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AuthProvider>
+    <Authenticator.Provider>
       <RouterProvider router={router} />
-    </AuthProvider>
+    </Authenticator.Provider>
   </StrictMode>,
 );
