@@ -160,6 +160,7 @@ function LoginPage() {
             keeps the demo available for genuine visitors interested in learning
             about AI automation solutions. If you have not registered,{" "}
             <Link
+              sx={{ cursor: "pointer" }}
               onClick={() => {
                 navigate("/register");
               }}

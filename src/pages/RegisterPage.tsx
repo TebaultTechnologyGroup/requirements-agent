@@ -14,7 +14,6 @@ import {
   IconButton,
 } from "@mui/material";
 import { signUp, confirmSignUp, signIn } from "aws-amplify/auth";
-//import { signUp, confirmSignUp, signIn } from "../auth/AuthContext";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
@@ -113,7 +112,7 @@ function RegisterPage() {
           minHeight: "100vh",
           display: "flex",
           alignItems: "center",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          background: "primary.light",
         }}
       >
         <Container maxWidth="sm">
@@ -164,159 +163,195 @@ function RegisterPage() {
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        bgcolor: "primary.light",
-      }}
-    >
-      <Container maxWidth="sm">
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Box sx={{ textAlign: "center", mb: 3 }}>
-            <Typography
-              variant="h4"
-              component="h1"
-              gutterBottom
-              sx={{ fontWeight: "bold" }}
-            >
-              Create Account
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Join Elder Care Reminder today
-            </Typography>
-          </Box>
+    <>
+      <Box
+        sx={{
+          mt: 3,
+          p: 2,
+          bgcolor: "#f3f4ff",
+          borderRadius: 2,
+          border: "1px solid #e0e4ff",
+        }}
+      >
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ lineHeight: 1.6, px: 2 }}
+        >
+          <strong>Why Register?</strong> This demo uses live AI services to
+          generate real documents. Authentication helps prevent misuse and keeps
+          the demo available for genuine visitors interested in learning about
+          AI automation solutions. If you have already registered,{" "}
+          <Link
+            sx={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Click here to login.
+          </Link>
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          minHeight: "75vh",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Container maxWidth="sm">
+          <Paper elevation={3} sx={{ p: 4 }}>
+            <Box sx={{ textAlign: "center", mb: 3 }}>
+              <Typography
+                variant="h4"
+                component="h1"
+                gutterBottom
+                sx={{ fontWeight: "bold" }}
+              >
+                Create Account
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Create an account to access the demo
+              </Typography>
+            </Box>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
 
-          <form onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
-                  autoFocus
-                  label="First Name"
-                  type="text"
-                  fullWidth
-                  required
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  autoComplete="given-name"
-                />
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    autoFocus
+                    label="First Name"
+                    type="text"
+                    fullWidth
+                    required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    autoComplete="given-name"
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    label="Last Name"
+                    type="text"
+                    fullWidth
+                    required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    autoComplete="family-name"
+                  />
+                </Grid>
               </Grid>
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
-                  label="Last Name"
-                  type="text"
-                  fullWidth
-                  required
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  autoComplete="family-name"
-                />
-              </Grid>
-            </Grid>
-            <TextField
-              margin="dense"
-              label="Email"
-              type="email"
-              fullWidth
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              sx={{ mt: 2 }}
-              autoComplete="email"
-            />
-            <TextField
-              margin="dense"
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              fullWidth
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              sx={{ mt: 2 }}
-              autoComplete="new-password"
-              helperText="At least 8 characters"
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handleClickShowPassword} edge="end">
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
-            <TextField
-              margin="dense"
-              label="Confirm Password"
-              type={showConfPassword ? "text" : "password"}
-              fullWidth
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              sx={{ mt: 2, mb: 3 }}
-              autoComplete="new-password"
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={handleClickShowConfPassword}
-                        edge="end"
-                      >
-                        {showConfPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              size="large"
-              disabled={loading}
-              sx={{ mb: 2 }}
-            >
-              {loading ? "Creating Account..." : "Create Account"}
-            </Button>
-          </form>
+              <TextField
+                margin="dense"
+                label="Email"
+                type="email"
+                fullWidth
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                sx={{ mt: 2 }}
+                autoComplete="email"
+              />
+              <TextField
+                margin="dense"
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                fullWidth
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                sx={{ mt: 2 }}
+                autoComplete="new-password"
+                helperText="At least 8 characters"
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+              <TextField
+                margin="dense"
+                label="Confirm Password"
+                type={showConfPassword ? "text" : "password"}
+                fullWidth
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                sx={{ mt: 2, mb: 3 }}
+                autoComplete="new-password"
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleClickShowConfPassword}
+                          edge="end"
+                        >
+                          {showConfPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                size="large"
+                disabled={loading}
+                sx={{ mb: 2 }}
+              >
+                {loading ? "Creating Account..." : "Create Account"}
+              </Button>
+            </form>
 
-          <Box sx={{ textAlign: "center", mt: 2 }}>
-            <Typography variant="body2" color="text.secondary">
-              Already have an account?{" "}
+            <Box sx={{ textAlign: "center", mt: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                Already have an account?{" "}
+                <Link
+                  component="button"
+                  onClick={() => navigate("/login")}
+                  sx={{ cursor: "pointer" }}
+                >
+                  Sign in here
+                </Link>
+              </Typography>
+            </Box>
+
+            <Box sx={{ textAlign: "center", mt: 1 }}>
               <Link
                 component="button"
-                onClick={() => navigate("/login")}
+                variant="body2"
+                onClick={() => navigate("/")}
                 sx={{ cursor: "pointer" }}
               >
-                Sign in here
+                Back to Home
               </Link>
-            </Typography>
-          </Box>
-
-          <Box sx={{ textAlign: "center", mt: 1 }}>
-            <Link
-              component="button"
-              variant="body2"
-              onClick={() => navigate("/")}
-              sx={{ cursor: "pointer" }}
-            >
-              Back to Home
-            </Link>
-          </Box>
-        </Paper>
-      </Container>
-    </Box>
+            </Box>
+          </Paper>
+        </Container>
+      </Box>
+    </>
   );
 }
 

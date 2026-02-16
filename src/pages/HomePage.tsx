@@ -82,7 +82,7 @@ function HomePage() {
             >
               <Button
                 component={Link}
-                to="/login"
+                to="/register"
                 variant="contained"
                 size="large"
                 sx={{
@@ -375,16 +375,23 @@ function HomePage() {
                 >
                   The Solution
                 </Typography>
+
                 <Typography variant="body1" sx={{ lineHeight: 1.8, mb: 2 }}>
-                  I help organizations create 3–6 months of operational capacity
-                  through targeted workflow simplification and practical AI
-                  automation.
+                  In a full production version, a system or agent would draw on
+                  your organization’s historical data, domain context, and
+                  project‑specific inputs to produce documentation in your
+                  preferred structure and voice, such as:
+                  <ul>
+                    <li>Product Requirements Documents</li>
+                    <li>Project Scope Statements</li>
+                    <li>Postmortem / Retrospective Reports</li>
+                    <li>And much more</li>
+                  </ul>
                 </Typography>
-                <Typography variant="body1" sx={{ lineHeight: 1.8 }}>
-                  This demo shows the caliber of solutions I build:
-                  production-ready tools that eliminate bottlenecks, reduce
-                  manual work, and free your teams to focus on what actually
-                  drives value.
+                <Typography variant="body1" sx={{ lineHeight: 1.8, mb: 2 }}>
+                  By streamlining these repetitive tasks, AI enables teams to
+                  focus on higher‑value work—strategy, problem‑solving, and
+                  delivering great products.
                 </Typography>
               </Box>
             </Grid>
