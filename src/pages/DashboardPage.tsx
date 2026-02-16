@@ -23,6 +23,8 @@ export default function DashboardPage() {
   const [error, setError] = useState<string>("");
   const client = generateClient<Schema>();
 
+  const quota: number = 5;
+
   useEffect(() => {
     loadProjects();
   }, []);
@@ -79,6 +81,20 @@ export default function DashboardPage() {
     }
   };
 
+  function renderProjectCount(numProjects: number) {
+    const remaining = quota - numProjects;
+    switch (numProjects) {
+      case 0:
+        return quota + " projects remaining";
+      case 1:
+        return "1 project (" + remaining + " remaining)";
+      case quota:
+        return "You have reached your monthly limit of 5 projects";
+      default:
+        return numProjects + " projects (" + remaining + " remaining)";
+    }
+  }
+
   if (loading) {
     return (
       <Box
@@ -118,33 +134,35 @@ export default function DashboardPage() {
               Your Projects
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {projects.length} {projects.length === 1 ? "project" : "projects"}
+              {renderProjectCount(projects.length)}
             </Typography>
           </Box>
-          <Button
-            variant="contained"
-            component={Link}
-            to="/project"
-            size="large"
-            sx={{
-              bgcolor: "#667eea",
-              px: 3,
-              py: 1.5,
-              borderRadius: 2,
-              textTransform: "none",
-              fontSize: "1rem",
-              fontWeight: 600,
-              boxShadow: "0 4px 14px rgba(102, 126, 234, 0.3)",
-              "&:hover": {
-                bgcolor: "#5568d3",
-                boxShadow: "0 6px 20px rgba(102, 126, 234, 0.4)",
-                transform: "translateY(-1px)",
-              },
-              transition: "all 0.2s ease-in-out",
-            }}
-          >
-            + New Project
-          </Button>
+          {projects.length < quota && (
+            <Button
+              variant="contained"
+              component={Link}
+              to="/project"
+              size="large"
+              sx={{
+                bgcolor: "#667eea",
+                px: 3,
+                py: 1.5,
+                borderRadius: 2,
+                textTransform: "none",
+                fontSize: "1rem",
+                fontWeight: 600,
+                boxShadow: "0 4px 14px rgba(102, 126, 234, 0.3)",
+                "&:hover": {
+                  bgcolor: "#5568d3",
+                  boxShadow: "0 6px 20px rgba(102, 126, 234, 0.4)",
+                  transform: "translateY(-1px)",
+                },
+                transition: "all 0.2s ease-in-out",
+              }}
+            >
+              + New Project
+            </Button>
+          )}
         </Stack>
 
         {error && (
