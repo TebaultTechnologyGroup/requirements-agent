@@ -4,16 +4,20 @@ import { data } from './data/resource';
 import { generatePRD } from './functions/generatePRD/resource';
 import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
 
+
 const backend = defineBackend({
   auth,
   data,
-  generatePRD // This name must match the schema reference
+  generatePRD
 });
 
-//Grant the Lambda function permission to invoke Bedrock
+
+// generatePRD policy
 backend.generatePRD.resources.lambda.addToRolePolicy(
   new PolicyStatement({
     actions: ['bedrock:InvokeModel'],
     resources: ['*'],
   })
 );
+
+

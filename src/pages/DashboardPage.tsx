@@ -9,6 +9,7 @@ import { Box, Grid, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "../../amplify/data/resource";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 
 type Project = {
   id: string;
@@ -22,6 +23,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const client = generateClient<Schema>();
+  const { user } = useAuthenticator((ctx) => [ctx.user]);
 
   const quota: number = 5;
 
@@ -35,8 +37,7 @@ export default function DashboardPage() {
       setError("");
 
       const response = await client.models.Generation.list({
-        // Sort by most recent first
-        // Note: You may need to add sorting in your query if available
+        filter: { userId: { eq: user.userId } },
       });
 
       console.log("Generations:", response);

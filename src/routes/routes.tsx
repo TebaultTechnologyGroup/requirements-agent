@@ -7,9 +7,11 @@ import ProjectPage from "./../pages/ProjectPage.tsx";
 import RegisterPage from "./../pages/RegisterPage.tsx";
 import { ProtectedRoute } from "../auth/ProtectedRoute.tsx";
 import { PublicRoute } from "../auth/PublicRoute.tsx";
+import { AdminRoute } from "./AdminRoute.tsx";
 import DashboardPage from "../pages/DashboardPage.tsx";
 import TestPage from "../pages/TestPage.tsx";
 import ProjectDetailPage from "../pages/ProjectDetailPage.tsx";
+import AdminPage from "../pages/AdminPage.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -41,7 +43,6 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        // Dynamic route for viewing a specific project
         path: "/project/:id",
         element: (
           <ProtectedRoute>
@@ -55,6 +56,15 @@ export const router = createBrowserRouter([
           <ProtectedRoute>
             <DashboardPage />
           </ProtectedRoute>
+        ),
+      },
+      {
+        // Admin-only route — redirects non-admin users to /dashboard
+        path: "admin",
+        element: (
+          <AdminRoute>
+            <AdminPage />
+          </AdminRoute>
         ),
       },
       {

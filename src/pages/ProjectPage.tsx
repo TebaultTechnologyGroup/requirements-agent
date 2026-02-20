@@ -1,271 +1,133 @@
-import { Box, Container, Paper, Stepper, Step, StepLabel } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  Box,
+  Container,
+  Paper,
+  Stepper,
+  Step,
+  StepLabel,
+  Backdrop,
+  CircularProgress,
+  Typography,
+  Alert,
+} from "@mui/material";
 import { generateClient } from "aws-amplify/data";
-import StepOne from "../components/StepOne";
-import StepThree from "../components/StepThree";
-import StepTwo from "../components/StepTwo";
-import ResultsView from "../components/ResultsView";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import type { Schema } from "../../amplify/data/resource";
+//import { fetchAuthSession } from "aws-amplify/auth";
+
+import StepOne from "../components/StepOne";
+import StepTwo from "../components/StepTwo";
+import StepThree from "../components/StepThree";
+import ResultsView from "../components/ResultsView";
 
 const client = generateClient<Schema>();
-
 const steps = ["Product Idea", "Target & Constraints", "Review & Generate"];
-
-interface PRDResult {
-  productRequirements: {
-    overview: string;
-    goals: string[];
-    successMetrics: string[];
-  };
-  userStories: Array<{
-    role: string;
-    action: string;
-    benefit: string;
-    acceptanceCriteria: string[];
-  }>;
-  risks: Array<{
-    category: string;
-    description: string;
-    likelihood: string;
-    impact: string;
-    mitigation: string;
-  }>;
-  mvpScope: {
-    inScope: string[];
-    outOfScope: string[];
-    timeline: string;
-    assumptions: string[];
-  };
-}
+const STORAGE_KEY = "project_form_draft";
 
 function ProjectPage() {
-  interface FormData {
-    title: string;
-    idea: string;
-    targetMarket: string;
-    constraints: string;
-    additionalContext: string;
-  }
-  const { user } = useAuthenticator();
+  const { user } = useAuthenticator((ctx) => [ctx.user]);
+
   const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState<FormData>({
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string>(""); // Initialized as string
+  const [result, setResult] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<
+    Schema["UserProfile"]["type"] | null
+  >(null);
+
+  const [formData, setFormData] = useState({
     title: "",
     idea: "",
     targetMarket: "",
     constraints: "",
     additionalContext: "",
   });
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [result, setResult] = useState<PRDResult | null>(null);
-  const [error, setError] = useState<string>("");
-  const [userProfile, setUserProfile] = useState<any>(null);
-  const [quota, setQuota] = useState({ used: 0, limit: 5 });
 
   useEffect(() => {
-    if (user) {
-      loadUserProfile();
-    }
-  }, [user]);
+    const loadData = async () => {
+      const saved = sessionStorage.getItem(STORAGE_KEY);
+      if (saved) setFormData(JSON.parse(saved));
 
-  async function loadUserProfile() {
-    try {
-      // Load user profile
-      const { data: profiles } = await client.models.UserProfile.list({
-        filter: { userId: { eq: user.userId } },
-      });
-
-      let userProfile = profiles[0];
-      setUserProfile(userProfile);
-
-      if (profiles.length === 0) {
-        // Create new profile with FREE plan
-        const newProfile = await client.models.UserProfile.create({
-          userId: user.userId,
-          email: user.signInDetails?.loginId || "",
-          plan: "FREE",
-          generationsThisMonth: 0,
-          monthResetDate: new Date().toISOString(),
+      try {
+        const { data: profiles } = await client.models.UserProfile.list({
+          filter: { userId: { eq: user.userId } },
         });
-        setUserProfile(newProfile.data);
-        setQuota({ used: 0, limit: 5 });
-      } else {
-        const profile = profiles[0];
-        setUserProfile(profile);
-
-        // Check if month has reset
-        const resetDate = new Date(profile.monthResetDate || "");
-        const now = new Date();
-        if (
-          now.getMonth() !== resetDate.getMonth() ||
-          now.getFullYear() !== resetDate.getFullYear()
-        ) {
-          // Reset counter
-          await client.models.UserProfile.update({
-            id: profile.id,
-            generationsThisMonth: 0,
-            monthResetDate: new Date().toISOString(),
-          });
-          setQuota({ used: 0, limit: getPlanLimit(profile.plan ?? 5) });
-        } else {
-          setQuota({
-            used: profile.generationsThisMonth || 0,
-            limit: getPlanLimit(profile.plan ?? 5),
-          });
-        }
+        if (profiles.length > 0) setUserProfile(profiles[0]);
+      } catch (err) {
+        console.log("Profile load failed", err);
       }
-    } catch (err) {
-      console.error("Error loading profile:", err);
-    }
-  }
-
-  function getPlanLimit(plan: string | number): number {
-    const planStr = String(plan);
-    switch (planStr) {
-      case "FREE":
-        return 5;
-      case "PRO":
-        return 50;
-      case "ENTERPRISE":
-        return 999999;
-      default:
-        return 5;
-    }
-  }
+    };
+    loadData();
+  }, []);
 
   const handleNext = () => {
-    setActiveStep((prevStep) => prevStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevStep) => prevStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-    setFormData({
-      title: "",
-      idea: "",
-      targetMarket: "",
-      constraints: "",
-      additionalContext: "",
-    });
-    setResult(null);
-    setError("");
-  };
-
-  async function handleGenerate() {
-    console.log("handleGenerate called in App.tsx");
-
-    if (quota.used >= quota.limit) {
-      setError(
-        "You have reached your monthly generation limit. Please upgrade your plan.",
-      );
+    if (activeStep === 0 && (!formData.title || !formData.idea)) {
+      setError("Title and Idea are required.");
       return;
     }
+    setError("");
+    setActiveStep((prev) => prev + 1);
+  };
 
+  const handleGenerate = async () => {
     setIsGenerating(true);
     setError("");
 
     try {
-      console.log("Starting generation with data:", {
-        idea: formData.idea.substring(0, 50) + "...",
-        targetMarket: formData.targetMarket.substring(0, 50) + "...",
-        constraints: formData.constraints.substring(0, 50) + "...",
-        additionalContext: formData.additionalContext.substring(0, 50) + "...",
-      });
+      // 1. Invoke Lambda Mutation
+      const { data, errors } = await client.mutations.generatePRD(formData);
+      if (errors) throw new Error(errors[0].message);
 
-      // Call the custom mutation
-      const response = await client.mutations.generatePRD({
-        title: formData.title,
-        idea: formData.idea,
-        targetMarket: formData.targetMarket,
-        constraints: formData.constraints || undefined,
-        additionalContext: formData.additionalContext || undefined,
-      });
+      const parsedData = JSON.parse(data as string);
 
-      console.log("Raw response:", response);
-
-      if (response.data) {
-        console.log("Response data:", response.data);
-        const prdData = JSON.parse(response.data as string);
-
-        console.log("Parsed PRD data:", prdData);
-
-        if (prdData.success) {
-          setResult(prdData.data);
-
-          //Update usage count
-          if (userProfile) {
-            await client.models.UserProfile.update({
-              id: userProfile.id,
-              generationsThisMonth: (userProfile.generationsThisMonth || 0) + 1,
-            });
-            setQuota((prev) => ({ ...prev, used: prev.used + 1 }));
-          }
-
-          // Save generation to history
-          await client.models.Generation.create({
-            title: formData.title,
-            userId: user.userId,
-            idea: formData.idea,
-            targetMarket: formData.targetMarket,
-            constraints: formData.constraints,
-            additionalContext: formData.additionalContext,
-            productRequirements: JSON.stringify(
-              prdData.data.productRequirements,
-            ),
-            userStories: JSON.stringify(prdData.data.userStories),
-            risks: JSON.stringify(prdData.data.risks),
-            mvpScope: JSON.stringify(prdData.data.mvpScope),
-            status: "COMPLETED",
-            completedAt: new Date().toISOString(),
-          });
-        } else {
-          console.error("PRD generation failed:", prdData.error);
-          setError(prdData.error || "Failed to generate PRD");
-        }
-      } else if (response.errors) {
-        console.error("GraphQL errors:", response.errors);
-        setError(
-          `GraphQL Error: ${response.errors.map((e: any) => e.message).join(", ")}`,
+      if (!parsedData?.data?.productRequirements?.overview) {
+        throw new Error(
+          "AI response was incomplete. Missing product overview.",
         );
-      } else {
-        console.error("No data in response");
-        setError("No data returned from generation");
       }
-    } catch (err: any) {
-      console.error("Generation error:", err);
-      console.error("Error details:", {
-        message: err.message,
-        stack: err.stack,
-        name: err.name,
+
+      // 3. Save the Generation record to the DB
+      await client.models.Generation.create({
+        ...formData,
+        userId: user.userId,
+        productRequirements: JSON.stringify(
+          parsedData.data.productRequirements,
+        ),
+        userStories: JSON.stringify(parsedData.data.userStories),
+        risks: JSON.stringify(parsedData.data.risks),
+        mvpScope: JSON.stringify(parsedData.data.mvpScope),
+        status: "COMPLETED",
+        completedAt: new Date().toISOString(),
       });
-      setError(err.message || "An error occurred during generation");
+
+      // 4. Update User Profile count
+      if (userProfile) {
+        await client.models.UserProfile.update({
+          id: userProfile.id,
+          generationsThisMonth: (userProfile.generationsThisMonth || 0) + 1,
+        });
+      }
+
+      setResult(parsedData.data);
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch (err: any) {
+      setError(err.message || "An error occurred during generation.");
     } finally {
       setIsGenerating(false);
     }
-  }
-
-  // const getPlanColor = (plan: string) => {
-  //   switch (plan) {
-  //     case "FREE":
-  //       return "default";
-  //     case "PRO":
-  //       return "primary";
-  //     case "ENTERPRISE":
-  //       return "secondary";
-  //     default:
-  //       return "default";
-  //   }
-  // };
+  };
 
   return (
-    <Box
-      sx={{ flexGrow: 1, minHeight: "100vh", bgcolor: "background.default" }}
-    >
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Box sx={{ py: 4, minHeight: "100vh", bgcolor: "background.default" }}>
+      <Container maxWidth="lg">
         <Paper sx={{ p: 4 }}>
+          {error !== "" && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+          )}
+
           {!result ? (
             <>
               <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
@@ -283,21 +145,20 @@ function ProjectPage() {
                   onNext={handleNext}
                 />
               )}
-
               {activeStep === 1 && (
                 <StepTwo
                   formData={formData}
                   setFormData={setFormData}
                   onNext={handleNext}
-                  onBack={handleBack}
+                  onBack={() => setActiveStep(0)}
                 />
               )}
-
               {activeStep === 2 && (
                 <StepThree
                   formData={formData}
-                  onBack={handleBack}
+                  onBack={() => setActiveStep(1)}
                   onGenerate={handleGenerate}
+                  user={user}
                   isGenerating={isGenerating}
                   error={error}
                 />
@@ -307,12 +168,25 @@ function ProjectPage() {
             <ResultsView
               result={result}
               formData={formData}
-              onReset={handleReset}
+              onReset={() => {
+                setResult(null);
+                setActiveStep(0);
+              }}
             />
           )}
         </Paper>
       </Container>
+
+      <Backdrop sx={{ color: "#fff", zIndex: 1301 }} open={isGenerating}>
+        <Box textAlign="center">
+          <CircularProgress color="inherit" />
+          <Typography variant="h6" sx={{ mt: 2 }}>
+            Architecting your PRD...
+          </Typography>
+        </Box>
+      </Backdrop>
     </Box>
   );
 }
+
 export default ProjectPage;

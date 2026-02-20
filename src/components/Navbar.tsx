@@ -4,11 +4,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import HomeIcon from "@mui/icons-material/Home";
-//import { useAuthenticator } from "../auth/AuthContext";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { Link } from "react-router-dom";
-//import { Login } from "@mui/icons-material";
-//import { LoginPage } from "../pages/LoginPage";
 
 export default function Navbar() {
   const { authStatus, signOut } = useAuthenticator();

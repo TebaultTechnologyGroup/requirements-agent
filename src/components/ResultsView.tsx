@@ -23,7 +23,9 @@ import {
   Download,
   CheckCircle,
   Assignment,
+  Home,
 } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 interface ResultsViewProps {
   result: {
@@ -181,8 +183,13 @@ ${formData.additionalContext ? `**Additional Context:** ${formData.additionalCon
           >
             Export Markdown
           </Button>
-          <Button variant="contained" startIcon={<Refresh />} onClick={onReset}>
-            New PRD
+          <Button
+            variant="contained"
+            startIcon={<Home />}
+            component={Link}
+            to="/Dashboard"
+          >
+            Home
           </Button>
         </Box>
       </Box>

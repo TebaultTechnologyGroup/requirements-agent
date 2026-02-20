@@ -1,5 +1,6 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 import { generatePRD } from '../functions/generatePRD/resource';
+import { postConfirmation } from "../auth/post-confirmation/resource";
 
 const schema = a.schema({
   // Custom mutation to generate PRD via Lambda
@@ -20,13 +21,16 @@ const schema = a.schema({
     .model({
       userId: a.string().required(),
       email: a.string().required(),
+      role: a.enum(['USER', 'ADMIN']),
       plan: a.enum(['FREE', 'PRO', 'ENTERPRISE']),
       generationsThisMonth: a.integer().default(0),
       monthResetDate: a.string(),
     })
     .authorization((allow) => [
       allow.owner(),
-      allow.authenticated().to(['read'])
+      allow.ownerDefinedIn("userId"),
+      allow.authenticated().to(['read']),
+      allow.groups(["ADMINS"]).to(["read", "update", "delete"])
     ]),
 
   Generation: a
@@ -51,6 +55,7 @@ const schema = a.schema({
     })
     .authorization((allow) => [
       allow.owner(),
+      allow.groups(["ADMINS"]).to(["read", "update", "delete"])
     ]),
 
   PlanQuota: a
@@ -61,9 +66,10 @@ const schema = a.schema({
     })
     .authorization((allow) => [
       allow.authenticated().to(['read']),
-      allow.guest().to(['read'])
+      allow.guest().to(['read']),
+      allow.groups(["ADMINS"]).to(["read", "update", "delete"])
     ]),
-});
+}).authorization(allow => [allow.resource(postConfirmation)]);
 
 export type Schema = ClientSchema<typeof schema>;
 
