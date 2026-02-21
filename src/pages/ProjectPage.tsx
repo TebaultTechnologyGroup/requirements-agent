@@ -95,7 +95,7 @@ function ProjectPage() {
       const { userId } = await getCurrentUser();
 
       // 3. Save the Generation record to the DB
-      await client.models.Generation.create({
+      const r = await client.models.Generation.create({
         ...formData,
         userId: userId,
         productRequirements: JSON.stringify(
@@ -107,6 +107,8 @@ function ProjectPage() {
         status: "COMPLETED",
         completedAt: new Date().toISOString(),
       });
+
+      console.log(JSON.stringify(r));
 
       // 4. Update User Profile count
       if (userProfile) {
@@ -160,7 +162,7 @@ function ProjectPage() {
                   onBack={() => setActiveStep(0)}
                 />
               )}
-              {activeStep === 2 && authStatus === "authenticated" && user && (
+              {activeStep === 2 && (
                 <StepThree
                   formData={formData}
                   onBack={() => setActiveStep(1)}

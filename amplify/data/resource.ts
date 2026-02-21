@@ -54,8 +54,8 @@ const schema = a.schema({
       errorMessage: a.string(),
     })
     .authorization((allow) => [
-      allow.authenticated().to(['read']),
-      allow.groups(["ADMINS"]).to(["read", "update", "delete"])
+      allow.ownerDefinedIn("userId").to(["create", "read", "update"]),
+      allow.groups(["ADMINS"]).to(["create", "read", "update", "delete"])
     ]),
 
   PlanQuota: a
@@ -67,7 +67,7 @@ const schema = a.schema({
     .authorization((allow) => [
       allow.authenticated().to(['read']),
       allow.guest().to(['read']),
-      allow.groups(["ADMINS"]).to(["read", "update", "delete"])
+      allow.groups(["ADMINS"]).to(["create", "read", "update", "delete"])
     ]),
 }).authorization(allow => [allow.resource(postConfirmation)]);
 
