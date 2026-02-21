@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "../../amplify/data/resource";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+import { getCurrentUser } from "aws-amplify/auth";
 
 type Project = {
   id: string;
@@ -31,20 +32,21 @@ export default function DashboardPage() {
   const quota: number = 5;
 
   useEffect(() => {
-    if (authStatus === "authenticated" && user?.userId) {
+    if (authStatus === "authenticated") {
       loadProjects();
-    } else {
+    } else if (authStatus !== "configuring") {
       setLoading(false);
     }
-  }, []);
+  }, [authStatus, user?.userId]);
 
   async function loadProjects() {
     try {
       setLoading(true);
       setError("");
+      const { userId } = await getCurrentUser();
 
       const response = await client.models.Generation.list({
-        filter: { userId: { eq: user.userId } },
+        filter: { userId: { eq: userId } },
       });
 
       console.log("Generations:", response);

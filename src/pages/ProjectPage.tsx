@@ -19,6 +19,7 @@ import StepOne from "../components/StepOne";
 import StepTwo from "../components/StepTwo";
 import StepThree from "../components/StepThree";
 import ResultsView from "../components/ResultsView";
+import { getCurrentUser } from "aws-amplify/auth";
 
 const client = generateClient<Schema>();
 const steps = ["Product Idea", "Target & Constraints", "Review & Generate"];
@@ -91,10 +92,12 @@ function ProjectPage() {
         );
       }
 
+      const { userId } = await getCurrentUser();
+
       // 3. Save the Generation record to the DB
       await client.models.Generation.create({
         ...formData,
-        userId: user.userId,
+        userId: userId,
         productRequirements: JSON.stringify(
           parsedData.data.productRequirements,
         ),
