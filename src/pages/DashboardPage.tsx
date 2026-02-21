@@ -45,6 +45,8 @@ export default function DashboardPage() {
       setError("");
       const { userId } = await getCurrentUser();
 
+      console.log("userId = ", userId);
+
       const response = await client.models.Generation.list({
         filter: { userId: { eq: userId } },
       });

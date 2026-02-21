@@ -70,12 +70,12 @@ export default function ProjectDetailPage() {
       setLoading(true);
       setError("");
 
-      console.log("Loading project:", projectId);
+      // console.log("Loading project:", projectId);
 
       // Fetch the generation by ID
       const response = await client.models.Generation.get({ id: projectId });
 
-      console.log("Generation response:", response);
+      // console.log("Generation response:", response);
 
       if (response.data) {
         const gen = response.data;
