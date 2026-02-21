@@ -19,7 +19,6 @@ import {
 } from "@mui/material";
 import {
   ExpandMore,
-  Refresh,
   Download,
   CheckCircle,
   Assignment,
@@ -63,11 +62,7 @@ interface ResultsViewProps {
   onReset: () => void;
 }
 
-export default function ResultsView({
-  result,
-  formData,
-  onReset,
-}: ResultsViewProps) {
+export default function ResultsView({ result, formData }: ResultsViewProps) {
   const [tabValue, setTabValue] = useState(0);
 
   const handleExportMarkdown = () => {
