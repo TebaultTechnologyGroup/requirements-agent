@@ -14,7 +14,6 @@ import {
 import { generateClient } from "aws-amplify/data";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import type { Schema } from "../../amplify/data/resource";
-//import { fetchAuthSession } from "aws-amplify/auth";
 
 import StepOne from "../components/StepOne";
 import StepTwo from "../components/StepTwo";
@@ -26,7 +25,10 @@ const steps = ["Product Idea", "Target & Constraints", "Review & Generate"];
 const STORAGE_KEY = "project_form_draft";
 
 function ProjectPage() {
-  const { user } = useAuthenticator((ctx) => [ctx.user]);
+  const { user, authStatus } = useAuthenticator((ctx) => [
+    ctx.user,
+    ctx.authStatus,
+  ]);
 
   const [activeStep, setActiveStep] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -45,20 +47,22 @@ function ProjectPage() {
   });
 
   useEffect(() => {
-    const loadData = async () => {
-      const saved = sessionStorage.getItem(STORAGE_KEY);
-      if (saved) setFormData(JSON.parse(saved));
+    if (authStatus === "authenticated" && user?.userId) {
+      const loadData = async () => {
+        const saved = sessionStorage.getItem(STORAGE_KEY);
+        if (saved) setFormData(JSON.parse(saved));
 
-      try {
-        const { data: profiles } = await client.models.UserProfile.list({
-          filter: { userId: { eq: user.userId } },
-        });
-        if (profiles.length > 0) setUserProfile(profiles[0]);
-      } catch (err) {
-        console.log("Profile load failed", err);
-      }
-    };
-    loadData();
+        try {
+          const { data: profiles } = await client.models.UserProfile.list({
+            filter: { userId: { eq: user.userId } },
+          });
+          if (profiles.length > 0) setUserProfile(profiles[0]);
+        } catch (err) {
+          console.log("Profile load failed", err);
+        }
+      };
+      loadData();
+    }
   }, []);
 
   const handleNext = () => {

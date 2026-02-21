@@ -23,12 +23,19 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const client = generateClient<Schema>();
-  const { user } = useAuthenticator((ctx) => [ctx.user]);
+  const { user, authStatus } = useAuthenticator((ctx) => [
+    ctx.user,
+    ctx.authStatus,
+  ]);
 
   const quota: number = 5;
 
   useEffect(() => {
-    loadProjects();
+    if (authStatus === "authenticated" && user?.userId) {
+      loadProjects();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   async function loadProjects() {
