@@ -26,9 +26,7 @@ export default function TestPage() {
   async function loadProjects() {
     try {
       const { userId } = await getCurrentUser();
-      const response = await client.models.Generation.list({
-        filter: { userId: { eq: userId } },
-      });
+      const response = await client.models.Generation.list();
 
       console.log("Generations:", response);
 
