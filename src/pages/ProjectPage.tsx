@@ -157,12 +157,11 @@ function ProjectPage() {
                   onBack={() => setActiveStep(0)}
                 />
               )}
-              {activeStep === 2 && (
+              {activeStep === 2 && authStatus === "authenticated" && user && (
                 <StepThree
                   formData={formData}
                   onBack={() => setActiveStep(1)}
                   onGenerate={handleGenerate}
-                  user={user}
                   isGenerating={isGenerating}
                   error={error}
                 />

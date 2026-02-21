@@ -7,7 +7,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { ArrowBack, AutoAwesome } from "@mui/icons-material";
-import { AuthUser } from "aws-amplify/auth";
 
 interface StepThreeProps {
   formData: {
@@ -18,8 +17,7 @@ interface StepThreeProps {
     additionalContext: string;
   };
   onBack: () => void;
-  onGenerate: (user: AuthUser) => void;
-  user: AuthUser;
+  onGenerate: () => void;
   isGenerating: boolean;
   error: string;
 }
@@ -28,13 +26,12 @@ export default function StepThree({
   formData,
   onBack,
   onGenerate,
-  user,
   isGenerating,
   error,
 }: StepThreeProps) {
-  const handleGenerateClick = (u: AuthUser) => {
+  const handleGenerateClick = () => {
     console.log("Generate button clicked in StepThree");
-    onGenerate(u);
+    onGenerate();
   };
 
   return (
@@ -114,7 +111,7 @@ export default function StepThree({
         <Button
           variant="contained"
           size="large"
-          onClick={() => handleGenerateClick(user)}
+          onClick={() => handleGenerateClick()}
           disabled={isGenerating}
           startIcon={
             isGenerating ? <CircularProgress size={20} /> : <AutoAwesome />
