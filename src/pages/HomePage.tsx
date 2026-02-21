@@ -8,7 +8,7 @@ import {
   Card,
   Chip,
 } from "@mui/material";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import SpeedIcon from "@mui/icons-material/Speed";

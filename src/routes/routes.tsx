@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router-dom";
 import HomePage from "./../pages/HomePage.tsx";
 import DetailsPage from "./../pages/DetailsPage.tsx";
 import MainLayout from "./../layouts/MainLayout.tsx";
