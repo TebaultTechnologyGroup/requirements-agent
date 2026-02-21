@@ -54,7 +54,7 @@ const schema = a.schema({
       errorMessage: a.string(),
     })
     .authorization((allow) => [
-      allow.authenticated().to(['read']),
+      allow.ownerDefinedIn("userId"),
       allow.groups(["ADMINS"]).to(["read", "update", "delete"])
     ]),
 
