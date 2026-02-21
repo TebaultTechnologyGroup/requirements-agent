@@ -9,8 +9,9 @@ import { Box, Grid } from "@mui/material";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "../../amplify/data/resource";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+import { getCurrentUser } from "aws-amplify/auth";
 
-type Project = { id: string; title: string; createdAt: string };
+type Project = { id: string; userId: string; title: string; createdAt: string };
 
 export default function TestPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -24,12 +25,17 @@ export default function TestPage() {
 
   async function loadProjects() {
     try {
-      const response = await client.models.Generation.list();
+      const { userId } = await getCurrentUser();
+      const response = await client.models.Generation.list({
+        filter: { userId: { eq: userId } },
+      });
+
       console.log("Generations:", response);
 
       if (response.data) {
         const formattedProjects = response.data.map((gen) => ({
           id: gen.id,
+          userId: userId,
           title: gen.title,
           createdAt: gen.createdAt || new Date().toISOString(),
         }));
@@ -367,6 +373,17 @@ export default function TestPage() {
                           }}
                         >
                           ID: {p.id}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            display: "block",
+                            mt: 1,
+                            color: "text.secondary",
+                            fontSize: "0.7rem",
+                          }}
+                        >
+                          USRID: {p.userId}
                         </Typography>
                       </Box>
                     </Box>
