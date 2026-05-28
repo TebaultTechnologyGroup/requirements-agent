@@ -30,7 +30,8 @@ export const handler = async (event: any) => {
         const prompt = buildPrompt({ title, idea, targetMarket, constraints, additionalContext });
 
         // this is the model id from AWS site.
-        const modelId = 'us.anthropic.claude-3-haiku-20240307-v1:0';
+        //const modelId = 'us.anthropic.claude-3-haiku-20240307-v1:0';
+        const modelId = 'us.anthropic.claude-haiku-4-5-20251001-v1:0';
 
         // build the payload.
         const payload = {
